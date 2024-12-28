@@ -68,7 +68,7 @@ After setting up the project, run the following command to start the development
 npm start
 ```
 
-The app will be available at <http://localhost:3000>. You can draw routes on the map, simulate travel along those routes, and save or edit your routes through the modal dialogs.
+The app will be available at <http://localhost:5173>. You can draw routes on the map, simulate travel along those routes, and save or edit your routes through the modal dialogs.
 
 ---
 
@@ -78,7 +78,7 @@ The app will be available at <http://localhost:3000>. You can draw routes on the
 
 1. Map Interface
 
-- Implement an interactive map view using Mapbox GL JS or Leaflet.
+- Implement an interactive map view using Leaflet.
 - Create a drawing tool for LineString geometry to plot routes.
 - Enable basic map controls (zoom, pan, etc.).
 - Provide clear visual feedback during route drawing, including snapping to road data if available.
