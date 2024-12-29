@@ -30,7 +30,6 @@ const HomePage: React.FC = () => {
 		selectedRoute,
 		setSelectedRoute,
 		mapInstanceRef,
-		markerRef,
 	} = useMapContext();
 
 	//  Get all routes
@@ -39,13 +38,14 @@ const HomePage: React.FC = () => {
 		queryFn: getAllRoutes,
 		refetchOnWindowFocus: false,
 	});
-	useEffect(() => {
-		if (savedRoutesData) {
+	useEffect(()=>{
+		if(savedRoutesData){
 			// console.log(savedRoutesData.data, '== Saved Data from  Routes ==')
 			toast.success(savedRoutesData?.message, { duration: 1000 });
-			setSavedRoutes(savedRoutesData?.data);
+			setSavedRoutes(savedRoutesData?.data)
+
 		}
-	}, [savedRoutesData]);
+	},[savedRoutesData])
 
 	// Mutation to add a route
 	const addRouteMutation = useMutation({
@@ -63,7 +63,7 @@ const HomePage: React.FC = () => {
 
 	// Mutation to delete a route
 	const deleteRouteMutation = useMutation({
-		mutationFn: (routeId: number) => deleteRoute(routeId),
+		mutationFn: (routeId:number) => deleteRoute(routeId ),
 		onSuccess: () => {
 			toast.success("Route deleted successfully!");
 			queryClient.invalidateQueries({ queryKey: ["savedRoutes"] });
@@ -82,35 +82,32 @@ const HomePage: React.FC = () => {
 	function drawSavedRoutes() {
 		// console.log(savedRoutes, "== Saved Data from  Routes ==");
 
+		//  Clear previous polylines
 		if (polyLinesRef.current) {
 			polyLinesRef.current.forEach((polyline) => {
 				if (mapInstanceRef.current) {
 					mapInstanceRef.current.removeLayer(polyline);
 				}
+			
 			});
 			polyLinesRef.current.length = 0;
 		}
 		// Draw new polylines
 		savedRoutes.forEach((route) => {
-			const geometry = route.geometry as unknown as {
-				type: string;
-				coordinates: number[][];
-			};
-			const coordinates = geometry?.coordinates?.map(([lat, lng]) => [
-				lat,
-				lng,
-			]);
-
+			const geometry = route.geometry as unknown as { type: string; coordinates: number[][] };;
+			const coordinates = geometry?.coordinates?.map(([lat, lng]) => [lat, lng]); 
+			
 			// console.log('cordinates',coordinates)
-
+			
 			if (mapInstanceRef.current && coordinates) {
 				const polyline = L.polyline(coordinates as [number, number][], {
-					color: "blue",
-					weight: 3,
+				  color: "blue",
+				  weight: 3,
 				}).addTo(mapInstanceRef.current);
 				// Store the polyline in the refs
-				polyLinesRef.current.push(polyline);
-			}
+				polyLinesRef.current.push(polyline); 
+				
+			  }
 		});
 	}
 
@@ -150,38 +147,28 @@ const HomePage: React.FC = () => {
 		deleteRouteMutation.mutate(routeId);
 	};
 
+	
 	const handlePan = (routeId: number) => {
-		// console.log('routeId', routeId);
 		const routeToPan = savedRoutes.find(
-			(route: { id: number }) => route.id === routeId
+		  (route: { id: number }) => route.id === routeId
 		) as Route | undefined;
-
+	  
 		if (!routeToPan) {
-			toast.error("Route not found.");
-			return;
+		  toast.error("Route not found.");
+		  return;
 		}
-		// console.log("Marker initial home", markerRef);
-		if (markerRef.current) {
-			markerRef.current.remove();
-			markerRef.current = null;
-		}
-
-		const coordinates: [number, number][] = (routeToPan?.geometry
-			?.coordinates as [number, number][]) ?? [0, 0];
+	  
+		const coordinates: [number, number][] = routeToPan?.geometry?.coordinates as [number, number][] ?? [0,0]; 
 		// console.log("coordinates",coordinates)
-		console.log(mapInstanceRef.current);
 		if (mapInstanceRef.current instanceof L.Map && coordinates) {
-			mapInstanceRef.current.panTo(coordinates[0]);
-			//   console.log("routeToPan", routeToPan)
-			const initialMarker = L.marker(coordinates[0]).addTo(
-				mapInstanceRef.current
-			);
-			markerRef.current = initialMarker;
-			setSelectedRoute(routeToPan);
+		  mapInstanceRef.current.panTo( coordinates[0]); 
+		//   console.log("routeToPan", routeToPan)
+		  setSelectedRoute(routeToPan);
 		} else {
-			toast.error("Unable to pan to the selected route.");
+		  toast.error("Unable to pan to the selected route.");
 		}
-	};
+	  };
+
 
 	return (
 		<>
@@ -197,15 +184,13 @@ const HomePage: React.FC = () => {
 				saveRouteLoading={addRouteMutation.isPending}
 			/>
 
-			{mapInstanceRef.current && (
-				<UserRoutes
-					setShowSavedRoutesMenu={setShowSavedRoutesMenu}
-					showSavedRoutesMenu={showSavedRoutesMenu}
-					savedRoutes={savedRoutesData?.data || {}}
-					handleDeleteRoute={handleDeleteRoute}
-					handlePanToRoute={handlePan}
-				/>
-			)}
+			<UserRoutes
+				setShowSavedRoutesMenu={setShowSavedRoutesMenu}
+				showSavedRoutesMenu={showSavedRoutesMenu}
+				savedRoutes={savedRoutesData?.data || {}}
+				handleDeleteRoute={handleDeleteRoute}
+				handlePanToRoute={handlePan}
+			/>
 
 			<button
 				type='button'
