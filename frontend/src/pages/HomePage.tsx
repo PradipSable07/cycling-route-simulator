@@ -30,6 +30,7 @@ const HomePage: React.FC = () => {
 		selectedRoute,
 		setSelectedRoute,
 		mapInstanceRef,
+		markerRef,
 	} = useMapContext();
 
 	//  Get all routes
@@ -157,12 +158,21 @@ const HomePage: React.FC = () => {
 		  toast.error("Route not found.");
 		  return;
 		}
+		console.log("Marker ", markerRef);
+				if (markerRef.current) {
+					markerRef.current.remove();
+					markerRef.current = null;
+				}
 	  
 		const coordinates: [number, number][] = routeToPan?.geometry?.coordinates as [number, number][] ?? [0,0]; 
 		// console.log("coordinates",coordinates)
 		if (mapInstanceRef.current instanceof L.Map && coordinates) {
 		  mapInstanceRef.current.panTo( coordinates[0]); 
 		//   console.log("routeToPan", routeToPan)
+		const initialMarker = L.marker(coordinates[0]).addTo(
+							mapInstanceRef.current
+						);
+						markerRef.current = initialMarker;
 		  setSelectedRoute(routeToPan);
 		} else {
 		  toast.error("Unable to pan to the selected route.");

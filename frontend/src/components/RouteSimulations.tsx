@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { useMapContext } from "../context/MapContext.tsx";
 import { RiResetLeftLine } from "react-icons/ri";
 import { MdMotionPhotosPause, MdNotStarted } from "react-icons/md";
+import { BsSpeedometer } from "react-icons/bs";
 
 interface RouteSimulationProps {
 	routeGeoJSON: any;
@@ -14,14 +15,11 @@ interface RouteSimulationProps {
 const RouteSimulations: React.FC<RouteSimulationProps> = ({ routeGeoJSON }) => {
 	const [simulationRunning, setSimulationRunning] = useState(false);
 	const [isSimulationPaused, setSimulationPaused] = useState(false);
-	// const [marker, setMarker] = useState<L.Marker | null>(null);
-	const [simulationSpeed, setSimulationSpeed] = useState(1000);
 	const [currentStep, setCurrentStep] = useState(0);
 	const [remainingDistance, setRemainingDistance] = useState(0);
-	const [liveSimulationSpeed, setLiveSimulationSpeed] = useState(0);
-	const { mapInstanceRef,speed } = useMapContext();
+	const { mapInstanceRef,speed,markerRef } = useMapContext();
 	const previousRoute = useRef(routeGeoJSON); // Track the previous route
-	const markerRef = useRef<L.Marker | null>(null);
+	
 
 	// Parse coordinates
 	const routeCoordinates = routeGeoJSON?.coordinates?.map(
@@ -127,13 +125,13 @@ const RouteSimulations: React.FC<RouteSimulationProps> = ({ routeGeoJSON }) => {
 					setSimulationRunning(false);
 					toast.success("Destination completed!");
 				}
-			}, simulationSpeed);
+			}, Number(speed)*100);
 		}
 
 		return () => {
 			if (interval) clearInterval(interval);
 		};
-	}, [simulationRunning, isSimulationPaused, simulationSpeed, currentStep]);
+	}, [simulationRunning, isSimulationPaused, speed, currentStep]);
 
 	const startSimulation = () => {
 		if (!routeCoordinates?.length) {

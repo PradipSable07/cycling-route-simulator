@@ -15,7 +15,8 @@ interface MapContextValue {
   setSelectedRoute: React.Dispatch<React.SetStateAction<Route | null>>;
   mapInstanceRef: React.MutableRefObject<MapInstanceType | null>;
   speed : string | number;
-  setSpeed : React.Dispatch<React.SetStateAction<string | number>>
+  setSpeed : React.Dispatch<React.SetStateAction<string | number>>;
+  markerRef: React.MutableRefObject<L.Marker | null>;
 }
 
 interface MapProviderProps {
@@ -32,10 +33,12 @@ export const MapProvider: React.FC<MapProviderProps> = ({ children }) => {
   const mapInstanceRef = useRef<MapInstanceType | null>(null);
   const [savedRoutes, setSavedRoutes] = useState<Route[]>([]);
   const [speed, setSpeed] = useState<string | number>("10");
+
+  const markerRef = useRef<L.Marker | null>(null);
   return (
     <MapContext.Provider
       value={{
-
+        markerRef,
         savedRoutes,
         setSavedRoutes,
         tempRoute,
