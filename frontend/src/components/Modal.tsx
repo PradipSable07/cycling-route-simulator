@@ -26,8 +26,8 @@ const PolylineModal: React.FC<PolylineModalProps> = ({
   if (!showAddRouteModal) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="p-4 bg-white shadow-md rounded-md w-[90%] max-w-md">
+    <div className="fixed z-50 w-full transform -translate-x-1/2 -translate-y-1/2 max-w-80 bg-glass top-1/2 left-1/2">
+      <div className="p-4">
         <div className="flex flex-col items-center gap-4">
           <input
             type="text"

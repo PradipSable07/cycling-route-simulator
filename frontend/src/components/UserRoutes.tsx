@@ -56,7 +56,7 @@ const {speed , setSpeed} = useMapContext()
 		return time.toFixed(2);
 	}
 	
-	// console.log('savedRoutes',savedRoutes)
+	
 	return (
 		<div
 			className={`p-5 absolute h-[100vh] w-[20rem] bg-glass shadow-inner top-0 right-0 overflow-auto ${

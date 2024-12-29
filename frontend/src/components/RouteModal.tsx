@@ -19,8 +19,8 @@ const RouteModal: React.FC<RouteModalProps> = ({
   if (!showAddRouteModal) return null;
 
   return (
-    <div className="modal">
-      <div className="modal-content">
+    <div className="fixed z-50 max-w-xl transform -translate-x-1/2 -translate-y-1/2 bg-glass top-1/2 left-1/2">
+      <div className="">
         <h2>Add New Route</h2>
         <input ref={routeNameRef} type="text" placeholder="Route Name" />
         <div>

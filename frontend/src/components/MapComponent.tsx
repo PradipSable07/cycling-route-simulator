@@ -26,6 +26,8 @@ const MapComponent: React.FC = () => {
 				17 // Initial zoom
 			);
 
+			
+
 			// Add the base layer
 			L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
 				mapInstanceRef.current

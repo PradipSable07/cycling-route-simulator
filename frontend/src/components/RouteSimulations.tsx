@@ -14,14 +14,12 @@ interface RouteSimulationProps {
 const RouteSimulations: React.FC<RouteSimulationProps> = ({ routeGeoJSON }) => {
 	const [simulationRunning, setSimulationRunning] = useState(false);
 	const [isSimulationPaused, setSimulationPaused] = useState(false);
-	// const [marker, setMarker] = useState<L.Marker | null>(null);
 	const [simulationSpeed, setSimulationSpeed] = useState(1000);
 	const [currentStep, setCurrentStep] = useState(0);
 	const [remainingDistance, setRemainingDistance] = useState(0);
-	const [liveSimulationSpeed, setLiveSimulationSpeed] = useState(0);
-	const { mapInstanceRef,speed } = useMapContext();
+	const { mapInstanceRef,speed,markerRef } = useMapContext();
 	const previousRoute = useRef(routeGeoJSON); // Track the previous route
-	const markerRef = useRef<L.Marker | null>(null);
+	
 
 	// Parse coordinates
 	const routeCoordinates = routeGeoJSON?.coordinates?.map(
@@ -73,7 +71,7 @@ const RouteSimulations: React.FC<RouteSimulationProps> = ({ routeGeoJSON }) => {
 			setCurrentStep(0);
 			setRemainingDistance(calculateTotalDistance());
 			previousRoute.current = routeGeoJSON;
-
+			console.log(mapInstanceRef.current)
 			if (mapInstanceRef.current instanceof L.Map && routeCoordinates?.length) {
 				console.log("Marker ", markerRef);
 				if (markerRef.current) {
